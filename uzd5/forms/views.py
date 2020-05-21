@@ -31,7 +31,12 @@ def material_act_form(request):
     if request.method == 'POST':
         form = MaterialActForm(request.POST)
         if form.is_valid():
-            form.save()
+            temp = form.save(commit=False)
+            temp.responsible_worker = request.user
+            temp.save()
+
+            temp.commissioners.add(*(form["commissioners"].value()))
+
             return redirect('forms:index')
     else:
         form = MaterialActForm()

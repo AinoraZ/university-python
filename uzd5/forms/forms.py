@@ -6,7 +6,7 @@ class MaterialActForm(ModelForm):
     class Meta:
         model = MaterialAct
         fields = ("institution_title", "seller", "invoice_series", "commissioners",
-                  "sellers_code", "date_bought", "location", "responsible_worker")
+                  "sellers_code", "date_bought", "location")
 
 
 class MaterialsForm(ModelForm):
