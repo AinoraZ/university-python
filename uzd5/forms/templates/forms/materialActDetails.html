@@ -1,0 +1,80 @@
+{% extends "forms/base.html" %}
+{% block content %}
+
+{% load humanize %}
+<div class="d-flex mb-2">
+<a class="btn btn-outline-primary ml-auto" href="{% url 'forms:material_act_form_details_pdf' material_act.id %}">PDF</a>
+    <a class="btn btn-outline-primary ml-2" href="{% url 'forms:material_form' material_act.id %}">Add Material</a>
+</div>
+<div class="card w-100 mb-3">
+    <div class="card-body text-center">
+    <h5 class="card-title">Act ({{ material_act.id | stringformat:"03d" }}) for {{ material_act.institution_title }}</h5>
+    <h6 class="card-subtitle mb-2 text-muted">
+        By {{ material_act.responsible_worker.first_name }}  {{ material_act.responsible_worker.last_name }}
+    </h6>
+    <p class="card-text">Location: {{ material_act.location }}</p>
+
+    <div class="card-header">Related invoice:</div>
+    <dl id="material-act-details" class="row text-left ml-3">
+        <dt class="col-sm-3 border-right text-right">Seller:</dt>
+        <dd class="col-sm-9">{{ material_act.seller }}</dd>
+
+        <dt class="col-sm-3 border-right text-right">Invoice series:</dt>
+        <dd class="col-sm-9">{{ material_act.invoice_series }}</dd>
+
+        <dt class="col-sm-3 border-right text-right">Sellers code:</dt>
+        <dd class="col-sm-9">{{ material_act.sellers_code }}</dd>
+
+        <dt class="col-sm-3 border-right text-right">Buy date:</dt>
+        <dd class="col-sm-9">{{ material_act.date_bought | date:"Y M d" }}</dd>
+    </dl>
+
+    <div class="card-header">Commisioners</div>
+    <ul class="list-group">
+        {% for commisioner in material_act.commissioners.all %}
+            <li class="list-group-item">{{ commisioner.first_name }} {{ commisioner.last_name }}</li>
+        {% empty %}
+            <li class="list-group-item">No assigned commisioners...</li>
+        {% endfor %}
+    </ul>
+    </div>
+</div>
+
+{% load mathfilters %}
+
+<table class="table table-striped">
+    <thead class="thead-dark">
+        <tr>
+            <th scope="col">#</th>
+            <th scope="col">Name</th>
+            <th scope="col">Amount</th>
+            <th scope="col">Amount Type</th>
+            <th scope="col">Price</th>
+            <th scope="col">Total</th>
+            <th scope="col">Reason</th>
+        </tr>
+    </thead>
+    <tbody>
+    {% for material in material_act.materials.all %}
+        <tr>
+            <th scope="row">{{ forloop.counter }}</th>
+            <td>{{ material.name }}</td>
+            <td>{{ material.amount }}</td>
+            <td>{{ material.amount_type }}</td>
+            <td>{{ material.sum | div:material.amount | stringformat:".2f"}}</td>
+            <td>{{ material.sum | stringformat:".2f"}}</td>
+            <td>{{ material.reason }}</td>
+        </tr>
+    {% empty %}
+        <tr>
+            <td class="text-center" colspan="7">No data</td>
+        </tr>
+    {% endfor %}
+        <tr class="bg-dark text-light">
+            <th class="text-right" colspan="5">Total:</th>
+            <td class="text-left" colspan="2">{{ material_total | stringformat:".2f" }}</td>
+        </tr>
+    </tbody>
+</table>
+
+{% endblock content %}

@@ -1,0 +1,25 @@
+{% extends "forms/base.html" %}
+{% block content %}
+
+{% load humanize %}
+{% if material_acts %}
+    <div class="d-flex mb-2">
+        <a class="btn btn-outline-primary ml-auto" href="{% url 'forms:material_act_form' %}">New form</a>
+    </div>
+    {% for material_act in material_acts %}
+        <div class="card w-100 mb-3">
+          <div class="card-body text-center">
+            <h5 class="card-title">Act ({{ material_act.id | stringformat:"03d" }}) for {{ material_act.institution_title }}</h5>
+            <h6 class="card-subtitle mb-2 text-muted">
+                By {{ material_act.responsible_worker.first_name }}  {{ material_act.responsible_worker.last_name }}
+            </h6>
+            <p class="card-text">Location: {{ material_act.location }}</p>
+            <a href="{% url "forms:material_act_form_details" material_act.id %}" class="w-100 btn btn-outline-info">Details</a>
+          </div>
+        </div>
+    {% endfor %}
+{% else %}
+    <p>No acts available</p>
+{% endif %}
+
+{% endblock content %}

@@ -1,0 +1,128 @@
+{% extends "forms/base.html" %}
+{% block content %}
+    <div class="content-section">
+        <form method="POST">
+            {% csrf_token %}
+            <legend class="border-bottom mb-4">Create new material act:</legend>
+            <div class="form-group">
+                <label for={{ form.institution_title.id_for_label}}>{{ form.institution_title.label_tag }}</label>
+                <input class="form-control"
+                       id="{{ form.institution_title.id_for_label }}"
+                       maxlength="30"
+                       name="{{ form.institution_title.html_name }}"
+                       value="{{ form.institution_title.value | default_if_none:"" }}"
+                       type="text"/>
+                {% for error in form.institution_title.errors %}
+                    <div class="invalid-feedback d-block"> {{ error|escape }} </div>
+                {% endfor %}
+            </div>
+            <div class="form-group">
+                <label for={{ form.location.id_for_label}}>{{ form.location.label_tag }}</label>
+                <input class="form-control"
+                       id="{{ form.location.id_for_label }}"
+                       maxlength="30"
+                       name="{{ form.location.html_name }}"
+                       value="{{ form.location.value | default_if_none:"" }}"
+                       type="text"/>
+                {% for error in form.location.errors %}
+                    <div class="invalid-feedback d-block"> {{ error|escape }} </div>
+                {% endfor %}
+            </div>
+            <div class="form-group">
+                <label for={{ form.responsible_worker.id_for_label}}>{{ form.responsible_worker.label_tag }}</label>
+                <select class="form-control"
+                        id="{{ form.responsible_worker.id_for_label}}"
+                        name="{{ form.responsible_worker.html_name }}"
+                >
+                    {% for value, label in form.responsible_worker.field.choices %}
+                        <option value="{{ value }}">{{label}}</option>
+                    {% endfor %}
+                </select>
+                {% for error in form.responsible_worker.errors %}
+                    <div class="invalid-feedback d-block"> {{ error|escape }} </div>
+                {% endfor %}
+            </div>
+            <div class="form-group">
+                <label for={{ form.commissioners.id_for_label}}>{{ form.commissioners.label_tag }}</label>
+                <select class="form-control selectpicker"
+                        multiple
+                        data-live-search="true"
+                        id="{{ form.commissioners.id_for_label}}"
+                        name="{{ form.commissioners.html_name }}"
+                >
+                    {% for value, label in form.commissioners.field.choices %}
+                        <option value="{{ value }}">{{ label }}</option>
+                    {% endfor %}
+                </select>
+                {% for error in form.commissioners.errors %}
+                    <div class="invalid-feedback d-block"> {{ error|escape }} </div>
+                {% endfor %}
+            </div>
+            <h4>Related invoice</h4>
+            <div class="border-bottom mb-4"></div>
+            <div class="form-group">
+                <label for={{ form.date_bought.id_for_label}}>{{ form.date_bought.label_tag }}</label>
+                <input class="form-control"
+                       id="{{ form.date_bought.id_for_label }}"
+                       maxlength="30"
+                       name="{{ form.date_bought.html_name }}"
+                       value="{{ form.date_bought.value | default_if_none:"" }}"
+                       type="text"/>
+                {% for error in form.date_bought.errors %}
+                    <div class="invalid-feedback d-block"> {{ error|escape }} </div>
+                {% endfor %}
+            </div>
+            <div class="form-group">
+                <label for={{ form.seller.id_for_label}}>{{ form.seller.label_tag }}</label>
+                <input class="form-control"
+                       id="{{ form.seller.id_for_label }}"
+                       maxlength="30"
+                       name="{{ form.seller.html_name }}"
+                       value="{{ form.seller.value | default_if_none:"" }}"
+                       type="text"/>
+                {% for error in form.seller.errors %}
+                    <div class="invalid-feedback d-block"> {{ error|escape }} </div>
+                {% endfor %}
+            </div>
+            <div class="form-group">
+                <label for={{ form.invoice_series.id_for_label}}>{{ form.invoice_series.label_tag }}</label>
+                <input class="form-control"
+                       id="{{ form.invoice_series.id_for_label }}"
+                       maxlength="30"
+                       name="{{ form.invoice_series.html_name }}"
+                       value="{{ form.invoice_series.value | default_if_none:"" }}"
+                       type="text"/>
+                {% for error in form.invoice_series.errors %}
+                    <div class="invalid-feedback d-block"> {{ error|escape }} </div>
+                {% endfor %}
+            </div>
+            <div class="form-group">
+                <label for={{ form.sellers_code.id_for_label}}>{{ form.sellers_code.label_tag }}</label>
+                <input class="form-control"
+                       id="{{ form.sellers_code.id_for_label }}"
+                       maxlength="30"
+                       name="{{ form.sellers_code.html_name }}"
+                       value="{{ form.sellers_code.value | default_if_none:"" }}"
+                       type="text"/>
+                {% for error in form.sellers_code.errors %}
+                    <div class="invalid-feedback d-block"> {{ error|escape }} </div>
+                {% endfor %}
+            </div>
+            <div class="form-group">
+                <button class="btn btn-primary" type="submit">Create</button>
+            </div>
+        </form>
+        <script type="text/javascript">
+            $(document).ready(function () {
+                $('#{{form.date_bought.id_for_label}}').datetimepicker({
+                    format: "YYYY-MM-DD",
+                    icons:
+                    {
+                        next: 'fa fa-angle-right',
+                        previous: 'fa fa-angle-left'
+                    },
+                });
+            });
+        </script>
+    </div>
+{% endblock content %}

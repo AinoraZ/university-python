@@ -1,0 +1,175 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<!--suppress HtmlDeprecatedTag -->
+<html lang="en">
+<head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8">
+    <title>Material Act {{ material_act.id | stringformat:"03d" }}</title>
+    <style type="text/css">
+        @page {
+            size: {{ pagesize }};
+            margin: 1cm 2cm;
+            height: 1cm;
+        }
+        .text-indent {
+            text-indent: 50px;
+        }
+        .table {
+            border: 1px solid #ababab;
+            text-align: center;
+            width: 100%;
+            max-width: 100%;
+            table-layout:fixed;
+            font-size: 10px;
+        }
+        .table tr th td{
+            white-space: nowrap;
+        }
+
+        .table th {
+            padding: 5px;
+            vertical-align: top;
+            background-color: #e8e8e8;
+        }
+        .table td {
+            padding: 5px;
+            vertical-align: top;
+            -pdf-keep-with-next: false;
+        }
+        .header {
+            margin-left: 10cm;
+        }
+
+        td.bottom-border {
+            border-bottom: 1px solid black;
+        }
+
+        td.push-down {
+            padding-top: 5px;
+            vertical-align: text-bottom;
+        }
+
+        hr {
+            display:inline-block;
+        }
+    </style>
+</head>
+<body>
+    {% load humanize %}
+    {% load mathfilters %}
+
+    <font size="12px">
+        <div class="header">
+            Patvirtinta {{ material_act.institution_title }} direktoriaus <br>
+            {{ material_act.date_created | date:"Y-m-d" }} isakymu Nr. {{ material_act.id | stringformat:"03d" }}
+        </div>
+        <br>
+        <div class="header">
+            <b>TVIRTINU:</b><br>
+            {{ material_act.institution_title }} direktoriaus <br>
+            {{ material_act.date_created | date:"Y \m. m \m\e\n d \d" }}
+        </div>
+    </font>
+    <br>
+    <h1 align="center">
+        {{ material_act.institution_title }}<br>
+        MATERIALINIU VERTYBIU NURASYMO A K T A S
+    </h1>
+    <p class="text-indent">
+        <font size="14px" style="text-indent: 50px">
+            Komisija patvirtinta {{ material_act.date_created | date:"Y-M-d" }}
+            isakymu Nr. {{ material_act.id | stringformat:"03d" }}
+            ,,Del komisijos sudarymo materialiniu vertybiu nurasymui”,
+            komisijos pirmininkas
+            {% for commisioner in material_act.commissioners.all %}
+                {{ commisioner.first_name }} {{ commisioner.last_name }},
+            {% endfor %}
+            nustate, kad per {{ material_act.date_created | date:"Y \m. m \m\e\n" }} ,,{{ material_act.location }}” sunaudojo:
+        </font>
+    </p>
+
+    <table class="table" border="1px" align="center">
+        <thead>
+            <tr>
+                <th class="first" scope="col" width="40px">Eil. Nr.</th>
+                <th align="left" scope="col">Materialines vertybes pavadinimas</th>
+                <th scope="col" width="80px">Mato vnt.</th>
+                <th scope="col" width="40px">Kiekis</th>
+                <th scope="col" width="80px">Kaina</th>
+                <th scope="col" width="80px">Suma su PVM EUR</th>
+                <th scope="col" align="left">Panaudojimo tikslas ir vieta</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for material in material_act.materials.all %}
+            <tr>
+                <th class="first" scope="row">{{ forloop.counter }}.</th>
+                <td align="left">{{ material.name }}</td>
+                <td>{{ material.amount_type }}</td>
+                <td>{{ material.amount }}</td>
+                <td>{{ material.sum | div:material.amount | stringformat:".2f"}}</td>
+                <td>{{ material.sum | stringformat:".2f"}}</td>
+                <td align="left">{{ material.reason }}</td>
+            </tr>
+        {% empty %}
+            <tr>
+                <td colspan="7">Duomenu nera...</td>
+            </tr>
+        {% endfor %}
+            <tr>
+                <th align="right" colspan="5">Is viso:</th>
+                <td>{{ material_total | stringformat:".2f" }}</td>
+                <td> </td>
+            </tr>
+        </tbody>
+    </table>
+    <br>
+    <font size="14px" style="text-indent: 50px">
+        Pagal pirkimo dokumentus:<br>
+        {{ material_act.seller }}
+        PVM s.f. {{ material_act.invoice_series }}
+        NR. {{ material_act.sellers_code }},
+        {{ material_act.date_bought | date:"Y-m-d" }}
+    </font>
+
+    <table class="commissioners" align="center">
+        <thead>
+            <tr>
+                <th scope="col" width="5cm"> </th>
+                <th scope="col" width="5cm"> </th>
+                <th scope="col"> </th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for commisioner in material_act.commissioners.all %}
+                <tr>
+                    {% if forloop.counter == 1 %}
+                        <td class="push-down">
+                            <font size="12px">Komisijos pirmininkas</font>
+                        </td>
+                    {% elif forloop.counter == 2 %}
+                        <td class="push-down">
+                            <font size="12px">Nariai</font>
+                        </td>
+                    {% else %}
+                        <td></td>
+                    {% endif %}
+                    <td class="bottom-border"> </td>
+                    <td class="text-indent push-down" ><font size="12px">{{ commisioner.first_name }} {{ commisioner.last_name }}</font></td>
+                </tr>
+            {% endfor %}
+            <tr>
+                <td class="push-down">
+                    <font size="12px">Mat. Atsakingas</font>
+                </td>
+                <td> </td>
+                <td class="text-indent push-down" >
+                    <font size="12px">
+                        {{ material_act.responsible_worker.first_name }}
+                        {{ material_act.responsible_worker.last_name }}
+                    </font>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</body>
+</html>

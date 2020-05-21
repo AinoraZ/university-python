@@ -1,0 +1,18 @@
+{% extends "forms/base.html" %}
+{% block content %}
+    <div class="text-center">
+        <h3>You have been successfully logged out</h3>
+        <div class="border-top pt-5"></div>
+        <div class="spinner">
+            <div class="spinner-border" role="status" style="align-content: center ;width: 5rem; height: 5rem">
+                <span class="sr-only">Redirecting...</span>
+            </div>
+            <h2>
+                <small class="text-muted">Redirecting</small>
+            </h2>
+        </div>
+        <a class="btn btn-outline-primary" href="{% url 'users:login' %}">Take me now!</a>
+    </div>
+
+    <meta http-equiv="refresh" content="2;url={% url 'users:login' %}">
+{% endblock content %}
